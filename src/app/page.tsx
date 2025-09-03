@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
@@ -38,7 +38,7 @@ const InteractiveLivePolling = () => {
   const [donationAmount, setDonationAmount] = useState('');
   const [userName, setUserName] = useState('');
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isCreatingPoll, setIsCreatingPoll] = useState(false);
+
   const [newPoll, setNewPoll] = useState({ title: '', options: ['', ''] });
 
   // Sample initial polls
@@ -121,7 +121,6 @@ const InteractiveLivePolling = () => {
 
     setPolls(prev => [poll, ...prev]);
     setNewPoll({ title: '', options: ['', ''] });
-    setIsCreatingPoll(false);
     addNotification('Poll created successfully!', 'success');
   };
 
@@ -153,7 +152,7 @@ const InteractiveLivePolling = () => {
     setDonationAmount('');
   };
 
-  const simulateRandomVote = (poll: Poll) => {
+  const simulateRandomVote = useCallback((poll: Poll) => {
     const randomOption = Math.floor(Math.random() * poll.options.length);
     const randomDonation = Math.random() > 0.7 ? Math.floor(Math.random() * 50) + 5 : 0;
     const voteWeight = randomDonation > 0 ? Math.floor(randomDonation / 10) + 1 : 1;
@@ -178,7 +177,7 @@ const InteractiveLivePolling = () => {
         : `✅ ${randomName} voted!`,
       'success'
     );
-  };
+  }, []);
 
   // Auto-simulate votes every 3-8 seconds
   useEffect(() => {
@@ -190,7 +189,7 @@ const InteractiveLivePolling = () => {
     }, Math.random() * 5000 + 3000);
 
     return () => clearInterval(interval);
-  }, [polls, activePoll]);
+  }, [polls, activePoll, simulateRandomVote]);
 
   const HomeView = () => (
     <div className="space-y-8">
@@ -199,7 +198,7 @@ const InteractiveLivePolling = () => {
           🏏 Vidyartha vs Sylvester Big Match 2025
         </h1>
         <div className="text-2xl font-semibold text-blue-600 mb-4">
-          "The Battles of the Babes"
+          &ldquo;The Battles of the Babes&rdquo;
         </div>
         
         {/* School Badges Section */}
@@ -222,7 +221,7 @@ const InteractiveLivePolling = () => {
               <Image src="/ssckk.png" alt="ssck" width={70} height={70} style={{ borderRadius: "45px" }}/>
             
             </div>
-            <div className="font-bold text-red-800">Sylvester's College</div>
+            <div className="font-bold text-red-800">Sylvester&apos;s College</div>
             <div className="text-sm text-gray-600">Fortiter In Re</div>
           </div>
         </div>
@@ -335,7 +334,7 @@ const InteractiveLivePolling = () => {
           <div className="bg-black bg-opacity-20 rounded-lg p-6 border border-red-300">
             <div className="flex items-center justify-center gap-2 mb-2">
             <Image src="/ssckk.png" alt="ssck" width={70} height={70} style={{ borderRadius: "45px" }}/>
-              <h3 className="text-xl font-bold">Sylvester's College</h3>
+              <h3 className="text-xl font-bold">Sylvester&apos;s College</h3>
             </div>
             <p className="mb-2 text-red-200">Fortiter In Re</p>
             <div className="text-2xl font-bold">118 Votes</div>
@@ -436,11 +435,6 @@ const InteractiveLivePolling = () => {
   );
 
   const PollView = () => {
-    const chartData = activePoll?.options.map((option, index) => ({
-      name: option.text,
-      votes: option.votes,
-      percentage: activePoll.totalVotes > 0 ? ((option.votes / activePoll.totalVotes) * 100) : 0
-    })) || [];
 
     return (
       <div className="max-w-6xl mx-auto">
@@ -599,11 +593,6 @@ const InteractiveLivePolling = () => {
   };
 
   const DashboardView = () => {
-    const chartData = activePoll?.options.map((option, index) => ({
-      name: option.text,
-      votes: option.votes,
-      color: COLORS[index % COLORS.length]
-    })) || [];
 
     return (
       <div className="max-w-7xl mx-auto">
@@ -706,10 +695,6 @@ const InteractiveLivePolling = () => {
   };
 
   const OverlayView = () => {
-    const chartData = activePoll?.options.map((option) => ({
-      name: option.text.length > 15 ? option.text.substring(0, 15) + '...' : option.text,
-      votes: option.votes
-    })) || [];
 
     return (
       <div className="min-h-screen bg-black bg-opacity-90 p-4 relative">
@@ -789,7 +774,7 @@ const InteractiveLivePolling = () => {
             <div className="text-4xl mb-2">🏏</div>
             <div className="text-xl font-bold">Big Match 2025 Donation!</div>
             <div className="text-lg">Rs. 500.00</div>
-            <div className="text-sm opacity-90">5 votes added to "Vidyartha College 🦁"</div>
+            <div className="text-sm opacity-90">5 votes added to &ldquo;Vidyartha College 🦁&rdquo;</div>
             <div className="text-xs mt-2 text-yellow-200">
               Live donation alerts during the stream!
             </div>
