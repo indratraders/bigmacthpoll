@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
 
@@ -43,13 +44,9 @@ const InteractiveLivePolling = () => {
   const [currentView, setCurrentView] = useState('home');
   const [polls, setPolls] = useState<Poll[]>([]);
   const [activePoll, setActivePoll] = useState<Poll | null>(null);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [userName, setUserName] = useState('');
-  const [donationAmount, setDonationAmount] = useState('');
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isCreatingPoll, setIsCreatingPoll] = useState(false);
   const [newPoll, setNewPoll] = useState({ title: '', options: ['', ''] });
-  const [autoSimEnabled, setAutoSimEnabled] = useState(false);
+  const [autoSimEnabled] = useState(false);
 
   // Initialize polls with sample data
   useEffect(() => {
@@ -339,6 +336,7 @@ const InteractiveLivePolling = () => {
 
   // Auto-simulate votes every 3-8 seconds (disabled by default)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (!autoSimEnabled) return;
 
     const interval = setInterval(() => {
@@ -349,13 +347,13 @@ const InteractiveLivePolling = () => {
     }, Math.random() * 5000 + 3000);
 
     return () => clearInterval(interval);
-  }, [polls, activePoll, autoSimEnabled]);
+  }, [polls, activePoll, autoSimEnabled, simulateRandomVote]);
 
   const HomeView = () => (
     <div className="space-y-8">
       <div className="text-center">
         <h5 className="text-4xl font-bold text-gray-800 mb-2">
-          Sylvester's vs Vidyartha 2025 Rugby Match 13th September
+          Sylvester&apos;s vs Vidyartha 2025 Rugby Match 13th September
         </h5>
 
         {/* School Badges Section */}
@@ -364,7 +362,7 @@ const InteractiveLivePolling = () => {
             <div className="w-24 h-24 mx-auto mb-2 bg-gradient-to-b from-red-600 via-white to-blue-800 rounded-full flex items-center justify-center shadow-lg border-4 border-gray-300">
               <Image src="/ssckk.png" alt="ssck" width={70} height={70} style={{ borderRadius: "45px" }}/>
             </div>
-            <div className="font-bold text-red-800">Sylvester's College</div>
+            <div className="font-bold text-red-800">Sylvester&apos;s College</div>
           </div>
           
           <div className="text-4xl font-bold text-gray-400">VS</div>

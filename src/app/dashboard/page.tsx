@@ -19,7 +19,15 @@ interface Poll {
   venue?: string;
 }
 
-const DashboardPage = () => {
+interface DashboardProps {
+  data: {
+    id: string;
+    title: string;
+    value: number;
+  }[];
+}
+
+const DashboardPage = ({ data }: DashboardProps) => {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
 
