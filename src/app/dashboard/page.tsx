@@ -23,7 +23,8 @@ const DashboardPage = () => {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  useEffect(() => {
+  // Load data function
+  const loadData = () => {
     try {
       const stored = typeof window !== 'undefined' ? localStorage.getItem('polls') : null;
       if (stored) {
@@ -31,9 +32,7 @@ const DashboardPage = () => {
         if (Array.isArray(parsed)) setPolls(parsed);
       }
     } catch {}
-  }, []);
 
-  useEffect(() => {
     try {
       const txRaw = typeof window !== 'undefined' ? localStorage.getItem('transactions') : null;
       if (txRaw) {
@@ -41,6 +40,20 @@ const DashboardPage = () => {
         if (Array.isArray(parsed)) setTransactions(parsed);
       }
     } catch {}
+  };
+
+  // Initial load
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  // Real-time updates - refresh every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadData();
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const totals = useMemo(() => {
@@ -97,10 +110,44 @@ const DashboardPage = () => {
             <div className="text-3xl font-bold">Rs. {totals.totalDonations}</div>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm text-gray-500">Total Polls</div>
-            <div className="text-3xl font-bold">{polls.length}</div>
+            <div className="text-sm text-gray-500">Total Submissions</div>
+            <div className="text-3xl font-bold">{transactions.length}</div>
           </div>
         </div>
+
+        {/* Team Results Section */}
+        {polls.length > 0 && (
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 className="text-xl font-bold text-gray-800 mb-6">Team Results</h2>
+            <div className="space-y-4">
+              {polls[0]?.options?.map((option, index) => {
+                const percentage = polls[0].totalVotes > 0 ? 
+                  (option.votes / polls[0].totalVotes) * 100 : 0;
+                
+                return (
+                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium text-gray-800">{option.text}</span>
+                      <span className="text-xl font-bold text-blue-600">{option.votes} votes</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${percentage}%` }}
+                      ></div>
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {percentage.toFixed(1)}% of total votes
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="text-center text-sm text-gray-500 mt-4">
+              💡 This poll updates in real-time as others vote!
+            </div>
+          </div>
+        )}
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="overflow-x-auto">
