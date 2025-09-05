@@ -445,6 +445,7 @@ addNotification('Poll created successfully!', 'success');
           );
         })}
       </div>
+      <p></p>
 
       <div className="text-2xl font-semibold text-blue-600 mb-4">
         Brace yourself for an adrenalin-charged showdown! Witness the power, passion, and brotherhood as rivals collide on the rugby field in a battle for supremacy!
@@ -551,13 +552,20 @@ addNotification('Poll created successfully!', 'success');
           {/* Voting Section */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <SimpleVoteForm />
-            <p className='pt-2'>
+            <p className='pt-2 pb-10'>
               Account No : 1000592946<br/>
               Account Name : OBA St.Sylvesters <br/>
               Branch : KCC<br/>
               Bank : Commercial
             </p>
+                <p className="text-xl text-gray-600 mb-8">
+        This fund will be utilized for the development of college sports and will be subject to proper audit. The official account number of the Alumni Association is included here. We warmly invite all those who love sports to take part in this initiative. </p>
+        <p className="text-xl text-gray-600 mb-8">
+        විද්‍යාලීය ක්‍රීඩා සංවර්ධනය සදහා මෙම මුදල් යොදාගනු ලබන අතර නියමිත විගනනයට ලක්වන ආදිශිෂ්‍ය සංගමයේ නිල ගිනුම් අංකයක් මෙහි ඇතුලත් වේ ක්‍රීඩාවට ආදරය කරන සැමට මෙයට සහභාගී වීමට ආරාධනා කරමු
+        </p>
           </div>
+
+          
 
           {/* Results Section */}
           <div className="bg-white rounded-lg shadow-lg p-6">
