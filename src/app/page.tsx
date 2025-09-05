@@ -132,10 +132,9 @@ const InteractiveLivePolling = () => {
       isActive: true,
     };
 
-    setPolls(prev => [poll, ...prev]);
-    setNewPoll({ title: '', options: ['', ''] });
-    setIsCreatingPoll(false);
-    addNotification('Poll created successfully!', 'success');
+   setPolls(prev => [poll, ...prev]);
+setNewPoll({ title: '', options: ['', ''] });
+addNotification('Poll created successfully!', 'success');
   };
 
   // Simple vote form component
@@ -400,7 +399,7 @@ const InteractiveLivePolling = () => {
           <div className="bg-black bg-opacity-20 rounded-lg p-6 border border-red-300">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Image src="/ssckk.png" alt="ssck" width={70} height={70} style={{ borderRadius: "45px" }}/>
-              <h3 className="text-xl font-bold">Sylvester's College</h3>
+             <h3 className="text-xl font-bold">Sylvester&apos;s College</h3>
             </div>
             <div className="text-2xl font-bold">{polls[0]?.options?.[1]?.votes || 0} Votes</div>
           </div>
@@ -412,8 +411,7 @@ const InteractiveLivePolling = () => {
 
       <div className="grid gap-6 grid-cols-1">
         {polls.map((poll) => {
-          const leadingOption = poll.options.reduce((max, option) => 
-            option.votes > max.votes ? option : max, poll.options[0]);
+   
           
           return (
             <div key={poll.id} className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
@@ -921,3 +919,4 @@ const InteractiveLivePolling = () => {
 };
 
 export default InteractiveLivePolling;
+

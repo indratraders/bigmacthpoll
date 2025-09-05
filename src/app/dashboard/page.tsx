@@ -19,19 +19,19 @@ interface Poll {
   venue?: string;
 }
 
-interface DashboardProps {
-  data: {
-    id: string;
-    title: string;
-    value: number;
-  }[];
+interface Transaction {
+  id: string;
+  voterName: string;
+  supportedTeam: string;
+  donationAmount: number;
+  pollTitle: string;
+  timestamp: string;
 }
 
-const DashboardPage = ({ data }: DashboardProps) => {
+const DashboardPage = () => {
   const [polls, setPolls] = useState<Poll[]>([]);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // Load data function
   const loadData = () => {
     try {
       const stored = typeof window !== 'undefined' ? localStorage.getItem('polls') : null;
@@ -50,17 +50,14 @@ const DashboardPage = ({ data }: DashboardProps) => {
     } catch {}
   };
 
-  // Initial load
   useEffect(() => {
     loadData();
   }, []);
 
-  // Real-time updates - refresh every 2 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       loadData();
     }, 2000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -123,7 +120,6 @@ const DashboardPage = ({ data }: DashboardProps) => {
           </div>
         </div>
 
-        {/* Team Results Section */}
         {polls.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
             <h2 className="text-xl font-bold text-gray-800 mb-6">Team Results</h2>
@@ -131,7 +127,6 @@ const DashboardPage = ({ data }: DashboardProps) => {
               {polls[0]?.options?.map((option, index) => {
                 const percentage = polls[0].totalVotes > 0 ? 
                   (option.votes / polls[0].totalVotes) * 100 : 0;
-                
                 return (
                   <div key={index} className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
@@ -176,7 +171,9 @@ const DashboardPage = ({ data }: DashboardProps) => {
                     <td className="px-4 py-3 text-sm text-gray-700">{t.supportedTeam}</td>
                     <td className="px-4 py-3 text-sm font-semibold">{t.donationAmount}</td>
                     <td className="px-4 py-3 text-sm text-gray-700">{t.pollTitle}</td>
-                    <td className="px-4 py-3 text-sm text-gray-500">{t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}</td>
+                    <td className="px-4 py-3 text-sm text-gray-500">
+                      {t.timestamp ? new Date(t.timestamp).toLocaleString() : ''}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -189,5 +186,3 @@ const DashboardPage = ({ data }: DashboardProps) => {
 };
 
 export default DashboardPage;
-
-
